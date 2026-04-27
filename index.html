@@ -3,460 +3,551 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deux Serpents Animés</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <!-- Ajout de Font Awesome pour les icônes -->
+    <title>Projet Python - Récré Magic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #1a2a3a 0%, #0f1a2e 100%);
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Arial', sans-serif;
-            overflow: hidden;
-        }
-        
-        .container {
+            color: #fff;
             position: relative;
-            width: 800px;
-            height: 600px;
-            background: radial-gradient(circle at center, #1e3a5f 0%, #0c1b2e 70%);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 100px rgba(70, 130, 180, 0.3);
-            border: 2px solid rgba(100, 150, 200, 0.3);
-            overflow: hidden;
+            overflow-x: hidden;
         }
-        
-        canvas {
-            display: block;
+
+        /* Animation du fond */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            border-radius: 18px;
+            z-index: 0;
+            overflow: hidden;
         }
-        
-        .title {
+
+        .animated-bg .circle {
             position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #e0d5c1;
-            font-size: 28px;
-            font-weight: bold;
-            text-shadow: 0 0 20px rgba(150, 200, 255, 0.8);
-            letter-spacing: 4px;
-            z-index: 10;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-30px) translateX(20px); }
+        }
+
+        /* Confettis code */
+        .code-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
-            background: linear-gradient(180deg, #ffd700, #ff8c00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            z-index: 1;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            color: rgba(0, 255, 100, 0.15);
+            overflow: hidden;
         }
-        
-        /* Style du bouton de navigation */
-        .nav-button {
+
+        .code-line {
             position: absolute;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 20;
+            white-space: nowrap;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            from { transform: translateY(-100px); }
+            to { transform: translateY(100vh); }
+        }
+
+        /* Contenu principal */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 4rem 2rem;
+            margin-bottom: 3rem;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .header h1 {
+            font-size: 3rem;
             background: linear-gradient(135deg, #00d2ff, #3a7bd5);
-            color: white;
-            border: none;
-            padding: 12px 28px;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .header .badge {
+            display: inline-block;
+            background: rgba(0, 210, 255, 0.2);
+            border: 1px solid rgba(0, 210, 255, 0.5);
+            padding: 0.5rem 1.2rem;
             border-radius: 50px;
-            font-size: 16px;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-            cursor: pointer;
-            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+
+        .header .badge i {
+            margin-right: 0.5rem;
+        }
+
+        /* Grille des fonctionnalités */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 210, 255, 0.5);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            color: #00d2ff;
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Section code */
+        .code-section {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 4rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 8px;
-            box-shadow: 0 8px 25px rgba(0, 210, 255, 0.3);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            letter-spacing: 1px;
-            pointer-events: auto;
+            gap: 0.8rem;
         }
-        
-        .nav-button:hover {
-            transform: translateX(-50%) translateY(-3px);
-            box-shadow: 0 12px 35px rgba(0, 210, 255, 0.5);
-            background: linear-gradient(135deg, #1ae5ff, #4a8df5);
+
+        .code-section h2 i {
+            color: #00d2ff;
         }
-        
-        .nav-button i {
-            font-size: 18px;
+
+        .code-block {
+            background: #1a1a2e;
+            border-radius: 16px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            position: relative;
         }
-        
-        /* Ajustement de la position du texte info */
-        .info {
+
+        .code-block pre {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #e0e0e0;
+        }
+
+        .code-block .keyword {
+            color: #ff6b6b;
+        }
+        .code-block .function {
+            color: #00d2ff;
+        }
+        .code-block .string {
+            color: #6bff6b;
+        }
+        .code-block .comment {
+            color: #888;
+        }
+        .code-block .number {
+            color: #ffb86b;
+        }
+
+        .copy-btn {
             position: absolute;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(200, 210, 230, 0.7);
-            font-size: 12px;
-            z-index: 10;
-            pointer-events: none;
-            letter-spacing: 2px;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(0, 210, 255, 0.3);
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00d2ff;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 0.5rem;
+        }
+
+        /* Installation */
+        .install-section {
+            background: linear-gradient(135deg, rgba(0, 210, 255, 0.1), rgba(58, 123, 213, 0.1));
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 4rem;
+            border: 1px solid rgba(0, 210, 255, 0.3);
+        }
+
+        .install-section h2 {
+            margin-bottom: 1.5rem;
+        }
+
+        .install-command {
+            background: #1a1a2e;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-family: 'Fira Code', monospace;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .install-command span {
+            color: #00d2ff;
+        }
+
+        .install-command code {
+            color: #6bff6b;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #00d2ff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+            .header {
+                padding: 2rem 1rem;
+            }
+            .feature-card {
+                padding: 1.5rem;
+            }
+            .code-block pre {
+                font-size: 0.7rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="title">🐍 LES DEUX SERPENTS 🐍</div>
-        <canvas id="snakeCanvas"></canvas>
-        
-        <!-- Bouton de navigation vers python.html -->
-        <a href="python.html" class="nav-button">
-            <i class="fab fa-python"></i> Voir le projet Python
-        </a>
-        
-        <div class="info">Serpent Vert • Serpent Pourpre</div>
+
+<div class="animated-bg" id="animatedBg"></div>
+<div class="code-rain" id="codeRain"></div>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-icon">
+            <i class="fab fa-python"></i>
+        </div>
+        <h1>Mon Projet Python</h1>
+        <p>Une application moderne, efficace et élégante</p>
+        <div class="badge">
+            <i class="fas fa-code-branch"></i> Version 1.0.0
+        </div>
     </div>
 
-    <script>
-        (function() {
-            const canvas = document.getElementById('snakeCanvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Ajuster la résolution du canvas
-            function resizeCanvas() {
-                const container = canvas.parentElement;
-                canvas.width = container.clientWidth;
-                canvas.height = container.clientHeight;
+    <!-- Features -->
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🚀</div>
+            <h3>Performant</h3>
+            <p>Optimisé pour la vitesse et l'efficacité, avec un temps de réponse minimal.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>Sécurisé</h3>
+            <p>Code robuste avec gestion des erreurs et validation des entrées.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📦</div>
+            <h3>Modulaire</h3>
+            <p>Architecture modulaire facile à maintenir et à étendre.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Analytique</h3>
+            <p>Outils d'analyse et de reporting intégrés pour le suivi.</p>
+        </div>
+    </div>
+
+    <!-- Code Example -->
+    <div class="code-section">
+        <h2><i class="fas fa-code"></i> Exemple de code</h2>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode()"><i class="fas fa-copy"></i> Copier</button>
+            <pre id="codeExample"><code><span class="keyword">import</span> <span class="function">asyncio</span>
+<span class="keyword">from</span> <span class="function">datetime</span> <span class="keyword">import</span> datetime
+
+
+<span class="keyword">class</span> <span class="function">RecreMagicApp</span>:
+    <span class="string">"""Application principale de Récré Magic"""</span>
+    
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, name: str):
+        self.name = name
+        self.start_time = <span class="function">datetime</span>.now()
+    
+    <span class="keyword">async def</span> <span class="function">run</span>(self):
+        <span class="string">"""Exécute l'application"""</span>
+        <span class="keyword">print</span>(<span class="string">f"Bienvenue dans {self.name} !"</span>)
+        <span class="keyword">await</span> self.<span class="function">process_data</span>()
+    
+    <span class="keyword">async def</span> <span class="function">process_data</span>(self):
+        <span class="string">"""Traitement des données"""</span>
+        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">5</span>):
+            <span class="keyword">print</span>(<span class="string">f"Traitement... {i+1}/5"</span>)
+            <span class="keyword">await</span> <span class="function">asyncio</span>.sleep(<span class="number">0.5</span>)
+        <span class="keyword">print</span>(<span class="string">"✅ Traitement terminé !"</span>)
+
+
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    app = <span class="function">RecreMagicApp</span>(<span class="string">"Récré Magic"</span>)
+    <span class="function">asyncio</span>.run(app.<span class="function">run</span>())</code></pre>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Lignes de code</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">15</div>
+            <div class="stat-label">Modules</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">98%</div>
+            <div class="stat-label">Couverture de tests</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Disponibilité</div>
+        </div>
+    </div>
+
+    <!-- Installation -->
+    <div class="install-section">
+        <h2><i class="fas fa-terminal"></i> Installation</h2>
+        <div class="install-command">
+            <span>$</span>
+            <code>git clone https://github.com/recremagic/mon-projet.git</code>
+        </div>
+        <div class="install-command" style="margin-top: 1rem;">
+            <span>$</span>
+            <code>cd mon-projet && pip install -r requirements.txt</code>
+        </div>
+        <div class="install-command" style="margin-top: 1rem;">
+            <span>$</span>
+            <code>python main.py</code>
+        </div>
+        <p style="margin-top: 1.5rem; color: rgba(255,255,255,0.6);">
+            <i class="fas fa-info-circle"></i> Python 3.9 ou supérieur requis
+        </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2025 Récré Magic - Projet Python</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+            <a href="index.html"><i class="fas fa-home"></i> Retour au site principal</a>
+        </p>
+    </div>
+</div>
+
+<script>
+    // ==================== FOND ANIMÉ ====================
+    function createCircles() {
+        const container = document.getElementById('animatedBg');
+        const circlesCount = 15;
+        for (let i = 0; i < circlesCount; i++) {
+            const circle = document.createElement('div');
+            circle.classList.add('circle');
+            const size = Math.random() * 200 + 50;
+            circle.style.width = size + 'px';
+            circle.style.height = size + 'px';
+            circle.style.left = Math.random() * 100 + '%';
+            circle.style.top = Math.random() * 100 + '%';
+            circle.style.animationDelay = Math.random() * 10 + 's';
+            circle.style.animationDuration = Math.random() * 15 + 10 + 's';
+            container.appendChild(circle);
+        }
+    }
+    createCircles();
+
+    // ==================== PLUIE DE CODE ====================
+    const codeSnippets = [
+        'def solution():', 'import sys', 'class App:', 'return True', 'async def main()', 
+        'print("Hello")', 'for i in range()', 'if __name__', 'data.process()', 'from core import',
+        'self.init()', 'raise Exception', 'try/except', 'lambda x: x*2', '@staticmethod',
+        'while True:', 'break continue', 'list.append()', 'dict.get()', 'pathlib.Path'
+    ];
+    
+    function createCodeRain() {
+        const container = document.getElementById('codeRain');
+        const dropsCount = 35;
+        for (let i = 0; i < dropsCount; i++) {
+            const drop = document.createElement('div');
+            drop.classList.add('code-line');
+            drop.textContent = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+            drop.style.left = Math.random() * 100 + '%';
+            drop.style.fontSize = (Math.random() * 10 + 10) + 'px';
+            drop.style.animationDuration = Math.random() * 10 + 8 + 's';
+            drop.style.animationDelay = Math.random() * 15 + 's';
+            drop.style.opacity = Math.random() * 0.2 + 0.05;
+            container.appendChild(drop);
+        }
+    }
+    createCodeRain();
+
+    // ==================== COPIER LE CODE ====================
+    function copyCode() {
+        const code = document.getElementById('codeExample').innerText;
+        navigator.clipboard.writeText(code).then(() => {
+            const btn = document.querySelector('.copy-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Copié !';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 2000);
+        });
+    }
+
+    // ==================== SCROLL REVEAL ====================
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
             }
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-            
-            const width = () => canvas.width;
-            const height = () => canvas.height;
-            
-            // Classe Serpent
-            class Serpent {
-                constructor(couleurTete, couleurCorps, couleurVentre, x, y, direction, vitesse, nom) {
-                    this.segments = [];
-                    this.longueurMax = 45;
-                    this.epaisseur = 14;
-                    this.couleurTete = couleurTete;
-                    this.couleurCorps = couleurCorps;
-                    this.couleurVentre = couleurVentre;
-                    this.direction = direction;
-                    this.vitesse = vitesse;
-                    this.nom = nom;
-                    this.amplitudeOnde = 40 + Math.random() * 20;
-                    this.frequenceOnde = 0.03 + Math.random() * 0.02;
-                    this.decalagePhase = Math.random() * Math.PI * 2;
-                    this.angleTete = 0;
-                    
-                    // Initialiser les segments
-                    for (let i = 0; i < this.longueurMax; i++) {
-                        this.segments.push({
-                            x: x - Math.cos(direction) * i * 5,
-                            y: y - Math.sin(direction) * i * 3,
-                            angle: direction
-                        });
-                    }
-                }
-                
-                mettreAJour(temps) {
-                    // Mouvement ondulatoire
-                    const t = temps * 0.001;
-                    const onde = Math.sin(t * this.vitesse * this.frequenceOnde + this.decalagePhase) * this.amplitudeOnde;
-                    this.angleTete = this.direction + onde * 0.05;
-                    
-                    // Déplacer la tête
-                    const tete = this.segments[0];
-                    const nouvelleTete = {
-                        x: tete.x + Math.cos(this.angleTete) * this.vitesse * 1.8,
-                        y: tete.y + Math.sin(this.angleTete) * this.vitesse * 1.2,
-                        angle: this.angleTete
-                    };
-                    
-                    // Rebondir sur les bords
-                    if (nouvelleTete.x < 60 || nouvelleTete.x > width() - 60) {
-                        this.direction = Math.PI - this.direction;
-                        nouvelleTete.x = tete.x + Math.cos(this.direction) * this.vitesse * 2;
-                    }
-                    if (nouvelleTete.y < 80 || nouvelleTete.y > height() - 60) {
-                        this.direction = -this.direction;
-                        nouvelleTete.y = tete.y + Math.sin(this.direction) * this.vitesse * 2;
-                    }
-                    
-                    nouvelleTete.angle = this.direction;
-                    
-                    // Ajouter la nouvelle tête et retirer la queue
-                    this.segments.unshift(nouvelleTete);
-                    if (this.segments.length > this.longueurMax) {
-                        this.segments.pop();
-                    }
-                    
-                    // Mettre à jour les angles des segments
-                    for (let i = 1; i < this.segments.length; i++) {
-                        const prev = this.segments[i - 1];
-                        const curr = this.segments[i];
-                        curr.angle = Math.atan2(prev.y - curr.y, prev.x - curr.x);
-                    }
-                }
-                
-                dessiner(ctx) {
-                    if (this.segments.length < 2) return;
-                    
-                    // Dessiner le corps
-                    for (let i = this.segments.length - 1; i >= 1; i--) {
-                        const seg = this.segments[i];
-                        const prev = this.segments[i - 1];
-                        
-                        // Ombre portée
-                        ctx.save();
-                        ctx.shadowColor = 'rgba(0,0,0,0.5)';
-                        ctx.shadowBlur = 8;
-                        ctx.shadowOffsetX = 2;
-                        ctx.shadowOffsetY = 2;
-                        
-                        // Dégradé du corps
-                        const gradient = ctx.createLinearGradient(
-                            seg.x - this.epaisseur/2, seg.y - this.epaisseur/2,
-                            seg.x + this.epaisseur/2, seg.y + this.epaisseur/2
-                        );
-                        gradient.addColorStop(0, this.couleurCorps);
-                        gradient.addColorStop(0.5, this.couleurVentre);
-                        gradient.addColorStop(1, this.couleurCorps);
-                        
-                        ctx.beginPath();
-                        ctx.arc(seg.x, seg.y, this.epaisseur * (0.7 + (i / this.segments.length) * 0.3), 0, Math.PI * 2);
-                        ctx.fillStyle = gradient;
-                        ctx.fill();
-                        
-                        // Écailles décoratives
-                        if (i % 3 === 0) {
-                            ctx.beginPath();
-                            ctx.arc(seg.x, seg.y, this.epaisseur * 0.3, 0, Math.PI * 2);
-                            ctx.fillStyle = 'rgba(255,255,255,0.2)';
-                            ctx.fill();
-                        }
-                        
-                        ctx.restore();
-                        
-                        // Dessiner la connexion entre segments
-                        ctx.beginPath();
-                        ctx.moveTo(prev.x, prev.y);
-                        ctx.lineTo(seg.x, seg.y);
-                        ctx.lineWidth = this.epaisseur * 1.6;
-                        ctx.strokeStyle = this.couleurCorps;
-                        ctx.lineCap = 'round';
-                        ctx.stroke();
-                    }
-                    
-                    // Dessiner la tête
-                    const tete = this.segments[0];
-                    ctx.save();
-                    ctx.translate(tete.x, tete.y);
-                    ctx.rotate(tete.angle || 0);
-                    
-                    // Ombre de la tête
-                    ctx.shadowColor = 'rgba(0,0,0,0.7)';
-                    ctx.shadowBlur = 12;
-                    ctx.shadowOffsetX = 3;
-                    ctx.shadowOffsetY = 3;
-                    
-                    // Forme de la tête (ovale)
-                    ctx.beginPath();
-                    ctx.ellipse(0, 0, this.epaisseur * 1.4, this.epaisseur * 0.9, 0, 0, Math.PI * 2);
-                    ctx.fillStyle = this.couleurTete;
-                    ctx.fill();
-                    ctx.strokeStyle = 'rgba(0,0,0,0.3)';
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-                    
-                    // Yeux
-                    const yeuxX = this.epaisseur * 0.6;
-                    const yeuxY = this.epaisseur * 0.5;
-                    
-                    // Oeil gauche
-                    ctx.beginPath();
-                    ctx.arc(-yeuxX, -yeuxY, this.epaisseur * 0.35, 0, Math.PI * 2);
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fill();
-                    ctx.strokeStyle = 'rgba(0,0,0,0.8)';
-                    ctx.lineWidth = 1.5;
-                    ctx.stroke();
-                    
-                    // Pupille gauche
-                    ctx.beginPath();
-                    ctx.arc(-yeuxX + 1, -yeuxY, this.epaisseur * 0.18, 0, Math.PI * 2);
-                    ctx.fillStyle = '#111111';
-                    ctx.fill();
-                    
-                    // Oeil droit
-                    ctx.beginPath();
-                    ctx.arc(yeuxX, -yeuxY, this.epaisseur * 0.35, 0, Math.PI * 2);
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fill();
-                    ctx.strokeStyle = 'rgba(0,0,0,0.8)';
-                    ctx.lineWidth = 1.5;
-                    ctx.stroke();
-                    
-                    // Pupille droite
-                    ctx.beginPath();
-                    ctx.arc(yeuxX + 1, -yeuxY, this.epaisseur * 0.18, 0, Math.PI * 2);
-                    ctx.fillStyle = '#111111';
-                    ctx.fill();
-                    
-                    // Narines
-                    ctx.beginPath();
-                    ctx.arc(-this.epaisseur * 0.2, this.epaisseur * 0.15, 2, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-                    ctx.fill();
-                    ctx.beginPath();
-                    ctx.arc(this.epaisseur * 0.2, this.epaisseur * 0.15, 2, 0, Math.PI * 2);
-                    ctx.fill();
-                    
-                    // Langue fourchue
-                    const langueSortie = Math.sin(Date.now() * 0.01) * 0.3 + 0.7;
-                    ctx.beginPath();
-                    ctx.moveTo(0, this.epaisseur * 0.8);
-                    ctx.lineTo(-3, this.epaisseur * 0.8 + 12 * langueSortie);
-                    ctx.moveTo(0, this.epaisseur * 0.8);
-                    ctx.lineTo(3, this.epaisseur * 0.8 + 12 * langueSortie);
-                    ctx.strokeStyle = '#cc3333';
-                    ctx.lineWidth = 2;
-                    ctx.lineCap = 'round';
-                    ctx.stroke();
-                    
-                    // Sourcils/marques
-                    ctx.beginPath();
-                    ctx.arc(-yeuxX, -yeuxY - this.epaisseur * 0.3, this.epaisseur * 0.4, 0.2, Math.PI - 0.2);
-                    ctx.strokeStyle = 'rgba(0,0,0,0.4)';
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.arc(yeuxX, -yeuxY - this.epaisseur * 0.3, this.epaisseur * 0.4, 0.2, Math.PI - 0.2);
-                    ctx.stroke();
-                    
-                    ctx.restore();
-                    
-                    // Texte du nom
-                    if (this.nom) {
-                        ctx.save();
-                        ctx.font = 'bold 11px Arial';
-                        ctx.fillStyle = 'rgba(255,255,255,0.7)';
-                        ctx.textAlign = 'center';
-                        ctx.fillText(this.nom, tete.x, tete.y - this.epaisseur * 1.8);
-                        ctx.restore();
-                    }
-                }
+        });
+    }, observerOptions);
+    
+    const animatedElements = document.querySelectorAll('.feature-card, .stat-card, .code-section, .install-section');
+    animatedElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
+    
+    // Déclencher immédiatement pour les éléments visibles
+    setTimeout(() => {
+        animatedElements.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight) {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
             }
-            
-            // Créer les deux serpents
-            const serpent1 = new Serpent(
-                '#2ecc40', '#27ae60', '#a8e6cf',
-                width() * 0.3, height() * 0.5,
-                0.3, 1.8, '🐍 Vert'
-            );
-            
-            const serpent2 = new Serpent(
-                '#b10dc9', '#85144b', '#f0a6ca',
-                width() * 0.7, height() * 0.5,
-                Math.PI + 0.3, 1.9, '🐍 Pourpre'
-            );
-            
-            // Particules d'ambiance
-            const particules = [];
-            for (let i = 0; i < 30; i++) {
-                particules.push({
-                    x: Math.random() * width(),
-                    y: Math.random() * height(),
-                    taille: Math.random() * 3 + 1,
-                    vitesseX: (Math.random() - 0.5) * 0.4,
-                    vitesseY: (Math.random() - 0.5) * 0.4,
-                    opacite: Math.random() * 0.5 + 0.3
-                });
-            }
-            
-            // Animation
-            function animer(timestamp) {
-                ctx.clearRect(0, 0, width(), height());
-                
-                // Fond avec effet de profondeur
-                const bgGradient = ctx.createRadialGradient(width()/2, height()/2, 50, width()/2, height()/2, width()/1.5);
-                bgGradient.addColorStop(0, '#1a3050');
-                bgGradient.addColorStop(1, '#091520');
-                ctx.fillStyle = bgGradient;
-                ctx.fillRect(0, 0, width(), height());
-                
-                // Grille subtile
-                ctx.strokeStyle = 'rgba(100, 150, 200, 0.05)';
-                ctx.lineWidth = 1;
-                for (let x = 0; x < width(); x += 40) {
-                    ctx.beginPath();
-                    ctx.moveTo(x, 0);
-                    ctx.lineTo(x, height());
-                    ctx.stroke();
-                }
-                for (let y = 0; y < height(); y += 40) {
-                    ctx.beginPath();
-                    ctx.moveTo(0, y);
-                    ctx.lineTo(width(), y);
-                    ctx.stroke();
-                }
-                
-                // Particules flottantes
-                particules.forEach(p => {
-                    p.x += p.vitesseX;
-                    p.y += p.vitesseY;
-                    if (p.x < 0) p.x = width();
-                    if (p.x > width()) p.x = 0;
-                    if (p.y < 0) p.y = height();
-                    if (p.y > height()) p.y = 0;
-                    
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.taille, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(150, 200, 255, ${p.opacite})`;
-                    ctx.fill();
-                });
-                
-                // Mise à jour et dessin des serpents
-                serpent1.mettreAJour(timestamp);
-                serpent2.mettreAJour(timestamp);
-                
-                serpent1.dessiner(ctx);
-                serpent2.dessiner(ctx);
-                
-                // Effet de lueur autour des serpents
-                ctx.save();
-                ctx.globalCompositeOperation = 'lighter';
-                const tete1 = serpent1.segments[0];
-                const gradient1 = ctx.createRadialGradient(tete1.x, tete1.y, 5, tete1.x, tete1.y, 40);
-                gradient1.addColorStop(0, 'rgba(46, 204, 64, 0.4)');
-                gradient1.addColorStop(1, 'rgba(46, 204, 64, 0)');
-                ctx.fillStyle = gradient1;
-                ctx.fillRect(tete1.x - 40, tete1.y - 40, 80, 80);
-                
-                const tete2 = serpent2.segments[0];
-                const gradient2 = ctx.createRadialGradient(tete2.x, tete2.y, 5, tete2.x, tete2.y, 40);
-                gradient2.addColorStop(0, 'rgba(177, 13, 201, 0.4)');
-                gradient2.addColorStop(1, 'rgba(177, 13, 201, 0)');
-                ctx.fillStyle = gradient2;
-                ctx.fillRect(tete2.x - 40, tete2.y - 40, 80, 80);
-                ctx.restore();
-                
-                requestAnimationFrame(animer);
-            }
-            
-            requestAnimationFrame(animer);
-            
-            // Redimensionnement
-            window.addEventListener('resize', () => {
-                resizeCanvas();
-            });
-        })();
-    </script>
+        });
+    }, 100);
+</script>
 </body>
 </html>
