@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projet Python - Récré Magic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            color: #fff;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animation du fond */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .animated-bg .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-30px) translateX(20px); }
+        }
+
+        /* Confettis code */
+        .code-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            color: rgba(0, 255, 100, 0.15);
+            overflow: hidden;
+        }
+
+        .code-line {
+            position: absolute;
+            white-space: nowrap;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            from { transform: translateY(-100px); }
+            to { transform: translateY(100vh); }
+        }
+
+        /* Contenu principal */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 4rem 2rem;
+            margin-bottom: 3rem;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .header .badge {
+            display: inline-block;
+            background: rgba(0, 210, 255, 0.2);
+            border: 1px solid rgba(0, 210, 255, 0.5);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+
+        .header .badge i {
+            margin-right: 0.5rem;
+        }
+
+        /* Grille des fonctionnalités */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 210, 255, 0.5);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            color: #00d2ff;
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Section code */
+        .code-section {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 4rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .code-section h2 i {
+            color: #00d2ff;
+        }
+
+        .code-block {
+            background: #1a1a2e;
+            border-radius: 16px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block pre {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #e0e0e0;
+        }
+
+        .code-block .keyword {
+            color: #ff6b6b;
+        }
+        .code-block .function {
+            color: #00d2ff;
+        }
+        .code-block .string {
+            color: #6bff6b;
+        }
+        .code-block .comment {
+            color: #888;
+        }
+        .code-block .number {
+            color: #ffb86b;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(0, 210, 255, 0.3);
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00d2ff;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 0.5rem;
+        }
+
+        /* Installation */
+        .install-section {
+            background: linear-gradient(135deg, rgba(0, 210, 255, 0.1), rgba(58, 123, 213, 0.1));
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 4rem;
+            border: 1px solid rgba(0, 210, 255, 0.3);
+        }
+
+        .install-section h2 {
+            margin-bottom: 1.5rem;
+        }
+
+        .install-command {
+            background: #1a1a2e;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-family: 'Fira Code', monospace;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .install-command span {
+            color: #00d2ff;
+        }
+
+        .install-command code {
+            color: #6bff6b;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: #00d2ff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+            .header {
+                padding: 2rem 1rem;
+            }
+            .feature-card {
+                padding: 1.5rem;
+            }
+            .code-block pre {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="animated-bg" id="animatedBg"></div>
+<div class="code-rain" id="codeRain"></div>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-icon">
+            <i class="fab fa-python"></i>
+        </div>
+        <h1>Mon Projet Python</h1>
+        <p>Une application moderne, efficace et élégante</p>
+        <div class="badge">
+            <i class="fas fa-code-branch"></i> Version 1.0.0
+        </div>
+    </div>
+
+    <!-- Features -->
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🚀</div>
+            <h3>Performant</h3>
+            <p>Optimisé pour la vitesse et l'efficacité, avec un temps de réponse minimal.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>Sécurisé</h3>
+            <p>Code robuste avec gestion des erreurs et validation des entrées.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📦</div>
+            <h3>Modulaire</h3>
+            <p>Architecture modulaire facile à maintenir et à étendre.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Analytique</h3>
+            <p>Outils d'analyse et de reporting intégrés pour le suivi.</p>
+        </div>
+    </div>
+
+    <!-- Code Example -->
+    <div class="code-section">
+        <h2><i class="fas fa-code"></i> Exemple de code</h2>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode()"><i class="fas fa-copy"></i> Copier</button>
+            <pre id="codeExample"><code><span class="keyword">import</span> <span class="function">asyncio</span>
+<span class="keyword">from</span> <span class="function">datetime</span> <span class="keyword">import</span> datetime
+
+
+<span class="keyword">class</span> <span class="function">RecreMagicApp</span>:
+    <span class="string">"""Application principale de Récré Magic"""</span>
+    
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, name: str):
+        self.name = name
+        self.start_time = <span class="function">datetime</span>.now()
+    
+    <span class="keyword">async def</span> <span class="function">run</span>(self):
+        <span class="string">"""Exécute l'application"""</span>
+        <span class="keyword">print</span>(<span class="string">f"Bienvenue dans {self.name} !"</span>)
+        <span class="keyword">await</span> self.<span class="function">process_data</span>()
+    
+    <span class="keyword">async def</span> <span class="function">process_data</span>(self):
+        <span class="string">"""Traitement des données"""</span>
+        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">5</span>):
+            <span class="keyword">print</span>(<span class="string">f"Traitement... {i+1}/5"</span>)
+            <span class="keyword">await</span> <span class="function">asyncio</span>.sleep(<span class="number">0.5</span>)
+        <span class="keyword">print</span>(<span class="string">"✅ Traitement terminé !"</span>)
+
+
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    app = <span class="function">RecreMagicApp</span>(<span class="string">"Récré Magic"</span>)
+    <span class="function">asyncio</span>.run(app.<span class="function">run</span>())</code></pre>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Lignes de code</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">15</div>
+            <div class="stat-label">Modules</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">98%</div>
+            <div class="stat-label">Couverture de tests</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Disponibilité</div>
+        </div>
+    </div>
+
+    <!-- Installation -->
+    <div class="install-section">
+        <h2><i class="fas fa-terminal"></i> Installation</h2>
+        <div class="install-command">
+            <span>$</span>
+            <code>git clone https://github.com/recremagic/mon-projet.git</code>
+        </div>
+        <div class="install-command" style="margin-top: 1rem;">
+            <span>$</span>
+            <code>cd mon-projet && pip install -r requirements.txt</code>
+        </div>
+        <div class="install-command" style="margin-top: 1rem;">
+            <span>$</span>
+            <code>python main.py</code>
+        </div>
+        <p style="margin-top: 1.5rem; color: rgba(255,255,255,0.6);">
+            <i class="fas fa-info-circle"></i> Python 3.9 ou supérieur requis
+        </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2025 Récré Magic - Projet Python</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+            <a href="index.html"><i class="fas fa-home"></i> Retour au site principal</a>
+        </p>
+    </div>
+</div>
+
+<script>
+    // ==================== FOND ANIMÉ ====================
+    function createCircles() {
+        const container = document.getElementById('animatedBg');
+        const circlesCount = 15;
+        for (let i = 0; i < circlesCount; i++) {
+            const circle = document.createElement('div');
+            circle.classList.add('circle');
+            const size = Math.random() * 200 + 50;
+            circle.style.width = size + 'px';
+            circle.style.height = size + 'px';
+            circle.style.left = Math.random() * 100 + '%';
+            circle.style.top = Math.random() * 100 + '%';
+            circle.style.animationDelay = Math.random() * 10 + 's';
+            circle.style.animationDuration = Math.random() * 15 + 10 + 's';
+            container.appendChild(circle);
+        }
+    }
+    createCircles();
+
+    // ==================== PLUIE DE CODE ====================
+    const codeSnippets = [
+        'def solution():', 'import sys', 'class App:', 'return True', 'async def main()', 
+        'print("Hello")', 'for i in range()', 'if __name__', 'data.process()', 'from core import',
+        'self.init()', 'raise Exception', 'try/except', 'lambda x: x*2', '@staticmethod',
+        'while True:', 'break continue', 'list.append()', 'dict.get()', 'pathlib.Path'
+    ];
+    
+    function createCodeRain() {
+        const container = document.getElementById('codeRain');
+        const dropsCount = 35;
+        for (let i = 0; i < dropsCount; i++) {
+            const drop = document.createElement('div');
+            drop.classList.add('code-line');
+            drop.textContent = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+            drop.style.left = Math.random() * 100 + '%';
+            drop.style.fontSize = (Math.random() * 10 + 10) + 'px';
+            drop.style.animationDuration = Math.random() * 10 + 8 + 's';
+            drop.style.animationDelay = Math.random() * 15 + 's';
+            drop.style.opacity = Math.random() * 0.2 + 0.05;
+            container.appendChild(drop);
+        }
+    }
+    createCodeRain();
+
+    // ==================== COPIER LE CODE ====================
+    function copyCode() {
+        const code = document.getElementById('codeExample').innerText;
+        navigator.clipboard.writeText(code).then(() => {
+            const btn = document.querySelector('.copy-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Copié !';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 2000);
+        });
+    }
+
+    // ==================== SCROLL REVEAL ====================
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    const animatedElements = document.querySelectorAll('.feature-card, .stat-card, .code-section, .install-section');
+    animatedElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
+    
+    // Déclencher immédiatement pour les éléments visibles
+    setTimeout(() => {
+        animatedElements.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight) {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }
+        });
+    }, 100);
+</script>
+</body>
+</html>
